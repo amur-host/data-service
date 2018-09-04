@@ -2,7 +2,7 @@ const { curry } = require('ramda');
 
 const { convertPrice, convertAmount } = require('../../../../../utils/satoshi');
 
-const WAVES_DECIMALS = 8;
+const AMUR_DECIMALS = 8;
 
 /**
  * @typedef {object} PairDbResponse
@@ -12,8 +12,8 @@ const WAVES_DECIMALS = 8;
  * @property {BigNumber} last_price
  * @property {BigNumber} volume
  * @property {BigNumber} volume_price_asset
- * @property {BigNumber} [avg_price_with_waves]
- * @property {BigNumber} [price_asset_with_waves]
+ * @property {BigNumber} [avg_price_with_amur]
+ * @property {BigNumber} [price_asset_with_amur]
  */
 
 /**
@@ -21,19 +21,19 @@ const WAVES_DECIMALS = 8;
  * @property {BigNumber} first_price
  * @property {BigNumber} last_price
  * @property {BigNumber} volume
- * @property {BigNumber} volume_waves
+ * @property {BigNumber} volume_amur
  */
 
 /**
  * DB task returns array of values:
- * [aDecimals, pDecimals, firstPrice, lastPrice, volume, -volumeInPriceAsset, -avgPriceWithWaves]
- * depending on pair (does it have WAVES and if does, in which position)
+ * [aDecimals, pDecimals, firstPrice, lastPrice, volume, -volumeInPriceAsset, -avgPriceWithAmur]
+ * depending on pair (does it have AMUR and if does, in which position)
  * Possible cases:
- *  1. WAVES — amount asset. Volume in waves = volume
- *  2. WAVES — price asset. Volume in waves = volume_in_price_asset
- *  3. WAVES is not in pair
- *    3a. Correct pair WAVES/priceAsset. Volume in waves = volume_in_price_asset / avg_price to WAVES
- *    3b. Correct pair priceAsset/WAVES. Volume in waves = volume_in_price_asset * avg_price to WAVES
+ *  1. AMUR — amount asset. Volume in amur = volume
+ *  2. AMUR — price asset. Volume in amur = volume_in_price_asset
+ *  3. AMUR is not in pair
+ *    3a. Correct pair AMUR/priceAsset. Volume in amur = volume_in_price_asset / avg_price to AMUR
+ *    3b. Correct pair priceAsset/AMUR. Volume in amur = volume_in_price_asset * avg_price to AMUR
  * @typedef {function} transformResults
  * @returns PairInfoRaw
  */
@@ -47,7 +47,7 @@ const transformResults = curry(({ amountAsset, priceAsset }, result) => {
     first_price: firstPrice,
     volume,
     volume_price_asset: volumePriceAsset,
-    ...withWaves
+    ...withAmur
   } = result;
 
   const resultCommon = {
@@ -57,50 +57,50 @@ const transformResults = curry(({ amountAsset, priceAsset }, result) => {
   };
 
   switch (true) {
-    case amountAsset === 'WAVES':
+    case amountAsset === 'AMUR':
       return {
         ...resultCommon,
-        volume_waves: resultCommon.volume,
+        volume_amur: resultCommon.volume,
       };
-    case priceAsset === 'WAVES': {
+    case priceAsset === 'AMUR': {
       return {
         ...resultCommon,
-        volume_waves: convertAmount(WAVES_DECIMALS, volumePriceAsset),
+        volume_amur: convertAmount(AMUR_DECIMALS, volumePriceAsset),
       };
     }
     default: {
       const {
-        avg_price_with_waves: avgPriceWithWaves,
-        price_asset_with_waves: priceAssetWithWaves,
-      } = withWaves;
+        avg_price_with_amur: avgPriceWithAmur,
+        price_asset_with_amur: priceAssetWithAmur,
+      } = withAmur;
 
-      if (avgPriceWithWaves === null)
+      if (avgPriceWithAmur === null)
         return {
           ...resultCommon,
-          volume_waves: null,
+          volume_amur: null,
         };
 
       const volumeConverted = convertAmount(pDecimals, volumePriceAsset);
 
-      if (priceAssetWithWaves === 'WAVES') {
+      if (priceAssetWithAmur === 'AMUR') {
         const priceConverted = convertPrice(
           pDecimals,
-          WAVES_DECIMALS,
-          avgPriceWithWaves
+          AMUR_DECIMALS,
+          avgPriceWithAmur
         );
         return {
           ...resultCommon,
-          volume_waves: volumeConverted.multipliedBy(priceConverted),
+          volume_amur: volumeConverted.multipliedBy(priceConverted),
         };
       } else {
         const priceConverted = convertPrice(
-          WAVES_DECIMALS,
+          AMUR_DECIMALS,
           pDecimals,
-          avgPriceWithWaves
+          avgPriceWithAmur
         );
         return {
           ...resultCommon,
-          volume_waves: volumeConverted.dividedBy(priceConverted),
+          volume_amur: volumeConverted.dividedBy(priceConverted),
         };
       }
     }

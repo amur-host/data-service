@@ -43,27 +43,27 @@ const query = pair =>
     .crossJoin({ lp: lastPrice(pair) })
     .crossJoin({ v: volume(pair) });
 
-const averagePriceWithWaves = asset =>
+const averagePriceWithAmur = asset =>
   pg({ t: 'txs_7' })
     .select({
-      avg_price_with_waves: pg.raw(
+      avg_price_with_amur: pg.raw(
         'sum(amount :: DOUBLE PRECISION * price :: DOUBLE PRECISION) / sum(amount :: DOUBLE PRECISION)'
       ),
-      price_asset_with_waves: pg.min('price_asset'),
+      price_asset_with_amur: pg.min('price_asset'),
     })
     .whereRaw(
       "t.time_stamp BETWEEN timezone('utc', now() - INTERVAL '1 day') AND timezone('utc', now())"
     )
     .whereRaw(
       "(amount_asset || '/' || price_asset = ? OR amount_asset || '/' || price_asset = ?)",
-      [`${asset}/WAVES`, `WAVES/${asset}`]
+      [`${asset}/AMUR`, `AMUR/${asset}`]
     )
     .clone();
 
 module.exports = {
   query,
-  queryWithWaves: pair =>
+  queryWithAmur: pair =>
     query(pair)
       .clone()
-      .crossJoin({ ww: averagePriceWithWaves(pair.priceAsset) }),
+      .crossJoin({ ww: averagePriceWithAmur(pair.priceAsset) }),
 };

@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@amur/data-entities');
 
 const { curry } = require('ramda');
 

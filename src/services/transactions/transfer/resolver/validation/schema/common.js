@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@amur/data-entities');
 
 const { base58 } = require('../../../../../../utils/regex');
 

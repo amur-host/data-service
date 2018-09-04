@@ -1,5 +1,5 @@
 const { path } = require('ramda');
-const JSONBig = require('@waves/json-bigint');
+const JSONBig = require('@amur/json-bigint');
 
 const getValueFromCtx = path(['state', 'returnValue']);
 

@@ -1,9 +1,9 @@
 const { curry } = require('ramda');
 
-const selectQuery = curry(({ query, queryWithWaves }, pair) => {
-  if (pair.priceAsset === 'WAVES' || pair.amountAsset === 'WAVES')
+const selectQuery = curry(({ query, queryWithAmur }, pair) => {
+  if (pair.priceAsset === 'AMUR' || pair.amountAsset === 'AMUR')
     return query(pair);
-  else return queryWithWaves(pair);
+  else return queryWithAmur(pair);
 });
 
 module.exports = selectQuery;

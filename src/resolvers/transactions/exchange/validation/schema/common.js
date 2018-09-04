@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@amur/data-entities');
 const Joi = require('joi');
 const orderTypes = prefix => ({
   [`${prefix}_id`]: Joi.string().required(),

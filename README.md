@@ -1,12 +1,12 @@
-# Waves data service API
+# Amur data service API
 
 **⚠️ This service is currently in /v0. Breaking changes are coming in /v1 (also possible, but not likely, within /v0 releases). Please use with caution.**
 
-This is an API aimed at retrieving data from blockchain quickly and conveniently. We  support public APIs for: 
+This is an API aimed at retrieving data from blockchain quickly and conveniently. We  support public APIs for:
 - Mainnet
-  - [https://api.wavesplatform.com/v0/](https://api.wavesplatform.com/v0/)
+  - [https://api.amur.host/v0/](https://api.amur.host/v0/)
 - Testnet
-  - [https://api.testnet.wavesplatform.com/v0/](https://api.testnet.wavesplatform.com/v0/)
+  - [https://api.testnet.amur.host/v0/](https://api.testnet.amur.host/v0/)
 
 The provided links should redirect to Swagger API documentation automatically. If not, visit `/docs` for reference.
 
@@ -17,7 +17,7 @@ It is possible to create your own instance of this service. To do so, follow the
 
 #### Requirements
 
-1. PostgreSQL 10 database with a table stricture found in [wavesplatform/blockchain-postgres-sync](https://github.com/wavesplatform/blockchain-postgres-sync)
+1. PostgreSQL 10 database with a table stricture found in [amur-host/blockchain-postgres-sync](https://github.com/amur-host/blockchain-postgres-sync)
 2. Downloaded and continuously updated blockchain data in the database
 2. NodeJS or Docker for either running the service directly, or in a container
 
@@ -48,15 +48,15 @@ If you would like to use some other way of setting environment variables, just r
 ##### Docker
 1. Build a Docker image from the project root
    ```bash
-   docker build -t wavesplatform/data-service .
+   docker build -t amurhost/data-service .
    ```
 2. Run the container
    ```bash
-   docker run -p=<port>:3000 --env-file=variables.env wavesplatform/data-service
+   docker run -p=<port>:3000 --env-file=variables.env amurhost/data-service
    ```
-      
+
 A server will start at `localhost:<port>` (used in the `docker run` command). Logs will be handled by Docker. Use any other Docker options if necessary.
-    
+
 When using the container in production, we recommend establishing a Docker logging and restart policy.
 
 ##### NodeJS
@@ -68,9 +68,9 @@ When using the container in production, we recommend establishing a Docker loggi
    ```bash
    export $(cat variables.env | xargs) && NODE_ENV=production node src/index.js
    ```
-      
+
 Server will start at `localhost:PORT` (defaults to 3000). Logs will be directed to stdout.
-    
+
 If you decide to use NodeJS directly (without Docker), we recommend using a process manager, such as `pm2`.
 
 

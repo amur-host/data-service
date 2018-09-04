@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@amur/data-entities');
 
 const { base58 } = require('../../../../../utils/regex');
 
@@ -22,7 +22,7 @@ const output = Joi.object().keys({
   volume: Joi.object()
     .type(BigNumber)
     .required(),
-  volume_waves: Joi.object()
+  volume_amur: Joi.object()
     .type(BigNumber)
     .required()
     .allow(null),
